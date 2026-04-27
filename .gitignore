@@ -1,0 +1,6 @@
+menu
+*.out
+*.exe
+.DS_Store
+Memory_Card/memory
+TIC_TAC_TOE/tictactoe
