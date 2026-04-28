@@ -1,53 +1,72 @@
-#include <SFML/Graphics.hpp> //for graphics. (window, shapes, text, events) AND Simple and fast multimedia library
-#include <cstdlib> //command execution, random number generation, memory management, program control
+#include <SFML/Graphics.hpp>
+#include <cstdlib>
+#include <iostream>
 
 int main() {
-//Display screen 
-    sf::RenderWindow window(sf::VideoMode({600, 400}), "Game Hub");  // SFML constructor 
 
+    // ---------------- WINDOW ----------------
+    sf::RenderWindow window(sf::VideoMode({600, 400}), "Game Hub");
+
+    // ---------------- FONT ----------------
     sf::Font font;
-    font.openFromFile("/System/Library/Fonts/Supplemental/Arial.ttf");
-//tictactoe
-    sf::RectangleShape tttBtn({300.f, 70.f});
-    tttBtn.setPosition({150.f, 120.f});//SFML function (float only) 
-    tttBtn.setFillColor(sf::Color(80,80,100));
+    if (!font.openFromFile("/System/Library/Fonts/Supplemental/Arial.ttf")) {
+        std::cout << "Font failed to load\n";
+    }
 
-    sf::Text tttText(font, "Tic Tac Toe", 28);//font size 
-    tttText.setPosition({200.f, 135.f});
-//Memory card 
+    // ---------------- TIC TAC TOE BUTTON ----------------
+    sf::RectangleShape tttBtn({300.f, 70.f});
+    tttBtn.setPosition({150.f, 120.f});
+    tttBtn.setFillColor(sf::Color(80, 80, 100));
+
+    sf::Text tttText(font, "Tic Tac Toe", 28);
+    tttText.setPosition({190.f, 135.f});
+    tttText.setFillColor(sf::Color::White);
+
+    // ---------------- MEMORY GAME BUTTON ----------------
     sf::RectangleShape memBtn({300.f, 70.f});
     memBtn.setPosition({150.f, 220.f});
-    memBtn.setFillColor(sf::Color(80,80,100));
+    memBtn.setFillColor(sf::Color(80, 80, 100));
 
     sf::Text memText(font, "Memory Game", 28);
-    memText.setPosition({190.f, 235.f});
-//Game Loop
-    while (window.isOpen()) {
-        while (auto ev = window.pollEvent()) { 
+    memText.setPosition({180.f, 235.f});
+    memText.setFillColor(sf::Color::White);
 
-            if (ev->is<sf::Event::Closed>()) // How to CLOSE
+    // ---------------- LOOP ----------------
+    while (window.isOpen()) {
+
+        while (auto ev = window.pollEvent()) {
+
+            // CLOSE WINDOW
+            if (ev->is<sf::Event::Closed>())
                 window.close();
 
-            if (auto m = ev->getIf<sf::Event::MouseButtonPressed>()) { // mouse clicks 
-                float x = m->position.x;
-                float y = m->position.y;
+            // MOUSE CLICK
+            if (auto m = ev->getIf<sf::Event::MouseButtonPressed>()) {
 
-                // RUN GAMES IN BACKGROUND
-                if (tttBtn.getGlobalBounds().contains({x,y})) { // detects click
-                    system("./tictactoe &"); // Run tictactoe code 
+                float x = static_cast<float>(m->position.x);
+                float y = static_cast<float>(m->position.y);
+
+                // ---------- RUN GAMES ----------
+                if (tttBtn.getGlobalBounds().contains(sf::Vector2f(x, y))) {
+                    system("../TIC_TAC_TOE/tictactoe &");
                 }
 
-                if (memBtn.getGlobalBounds().contains({x,y})) { 
-                    system("./memory &"); // Run memory card code 
+                if (memBtn.getGlobalBounds().contains(sf::Vector2f(x, y))) {
+                    system("../Memory_Card/memory &");
                 }
             }
         }
 
-        window.clear(sf::Color(20,20,30)); // Background 
+        // ---------------- DRAW ----------------
+        window.clear(sf::Color(20, 20, 30));
+
         window.draw(tttBtn);
         window.draw(memBtn);
         window.draw(tttText);
         window.draw(memText);
-        window.display(); // Display 
+
+        window.display();
     }
+
+    return 0;
 }
